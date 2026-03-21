@@ -311,6 +311,7 @@
         <button class="btn btn-gold" onclick="openSession()">⚙ <span>Session</span></button>
         <button class="btn" onclick="openTheme()">🎨 <span>Theme</span></button>
         <button class="btn btn-danger" onclick="confirmReset()">↺ <span>Reset</span></button>
+        <button class="btn" onclick="disconnectFirebase()" id="disconnectBtn" style="display:none;background:rgba(224,82,82,0.1);border-color:var(--red);color:var(--red)">🔥 Reconfigure</button>
         <button class="btn" onclick="lockAdmin()" style="background:rgba(76,175,115,0.1);border-color:var(--accent);color:var(--accent)">🔒</button>
       </div>
       <button class="btn" id="loginBtn" onclick="openPin()">🔑 <span>Scorer Login</span></button>
@@ -447,8 +448,8 @@
 <!-- ══════════════════════════════════════════════ -->
 <script type="module">
 // ── Firebase SDK ──────────────────────────────────────────────────────────────
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, update, get }
+import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -520,21 +521,21 @@ function saveThemeLS(theme) {
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-(function boot() {
+(async function boot() {
   applyTheme(loadTheme());
   const savedLogo = localStorage.getItem("lb_logo");
   if (savedLogo) setLogo(savedLogo);
 
   const savedConfig = localStorage.getItem(LS_CONFIG);
   if (savedConfig) {
-    try { connectFirebase(JSON.parse(savedConfig)); return; } catch {}
+    try { await connectFirebase(JSON.parse(savedConfig)); return; } catch {}
   }
   const localData = localStorage.getItem(LS_LOCAL);
   if (localData) { try { useLocalMode(true); return; } catch {} }
 })();
 
 // ── Firebase Connect ──────────────────────────────────────────────────────────
-window.connectFirebase = function(existingConfig) {
+window.connectFirebase = async function(existingConfig) {
   const cfg = existingConfig || {
     apiKey:            document.getElementById("fb_apiKey").value.trim(),
     authDomain:        document.getElementById("fb_authDomain").value.trim(),
@@ -550,15 +551,25 @@ window.connectFirebase = function(existingConfig) {
   }
 
   try {
-    const app = initializeApp(cfg, "lb-app-" + Date.now());
+    // Use a fixed app name so re-initializing on page load doesn't create duplicates
+    let app;
+    try {
+      app = initializeApp(cfg, "lb-scorer");
+    } catch(e) {
+      // App already initialized — get existing instance
+      app = getApp("lb-scorer");
+    }
     db = getDatabase(app);
+    // Persist config so it auto-connects on every page load
     localStorage.setItem(LS_CONFIG, JSON.stringify(cfg));
     localMode = false;
-    document.getElementById("modeLabel").textContent = "Firebase live";
+    document.getElementById("modeLabel").textContent = "🔥 Firebase live";
+    document.getElementById("disconnectBtn").style.display = "";
     hideBanner(); showApp();
     subscribeFirebase();
-    toast("🔥 Connected to Firebase!");
+    if (!existingConfig) toast("🔥 Connected to Firebase!");
   } catch(e) {
+    console.error(e);
     alert("Firebase connection failed: " + e.message);
   }
 };
@@ -567,8 +578,24 @@ function subscribeFirebase() {
   const sessionRef = ref(db, "session");
   onValue(sessionRef, snap => {
     const data = snap.val();
-    if (data) { session = data; renderAll(); }
-    else { initFirebaseSession(); }
+    if (data) {
+      // Firebase may deserialize arrays as objects with numeric keys — normalize
+      if (data.rinks && !Array.isArray(data.rinks)) {
+        data.rinks = Object.values(data.rinks);
+      }
+      data.rinks = (data.rinks || []).map(r => {
+        // Normalize scores array too
+        if (r.scores && !Array.isArray(r.scores)) {
+          r.scores = Object.values(r.scores);
+        }
+        r.scores = r.scores || [];
+        return r;
+      });
+      session = data;
+      renderAll();
+    } else {
+      initFirebaseSession();
+    }
   });
 }
 
@@ -603,9 +630,16 @@ function writeSession(data) {
 function writeRinkScores(rinkId, scores) {
   const idx = session.rinks.findIndex(r => r.id === rinkId);
   if (idx < 0) return;
-  session.rinks[idx].scores = scores;
-  if (localMode) { saveLocal(); renderAll(); }
-  else update(ref(db, `session/rinks/${idx}`), { scores });
+  // Deep-copy scores to avoid reference issues
+  const scoresCopy = scores.map(s => ({ a: s.a || 0, b: s.b || 0 }));
+  // Write the full session to Firebase to avoid array-vs-object deserialization bugs
+  const updated = {
+    ...session,
+    rinks: session.rinks.map((r, i) =>
+      i === idx ? { ...r, scores: scoresCopy } : r
+    )
+  };
+  writeSession(updated);
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
@@ -730,6 +764,13 @@ window.lockAdmin = () => {
   document.getElementById("adminLabel").textContent = "View only";
   renderAll();
   toast("Locked.");
+};
+
+window.disconnectFirebase = () => {
+  if (confirm("Clear saved Firebase config and return to setup screen?")) {
+    localStorage.removeItem(LS_CONFIG);
+    location.reload();
+  }
 };
 
 // ── Score Entry ───────────────────────────────────────────────────────────────
