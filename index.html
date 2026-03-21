@@ -19,281 +19,140 @@
     --muted:    #5a8a6a;
     --header-bg:#0e2016;
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Source Sans 3', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-  /* ── Background ── */
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Sans 3',sans-serif; min-height:100vh; overflow-x:hidden; }
   body::before {
-    content: '';
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background:
-      radial-gradient(ellipse at 10% 0%, rgba(76,175,115,0.08) 0%, transparent 55%),
-      radial-gradient(ellipse at 90% 100%, rgba(240,192,64,0.06) 0%, transparent 55%);
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background: radial-gradient(ellipse at 10% 0%, rgba(76,175,115,0.08) 0%, transparent 55%),
+                radial-gradient(ellipse at 90% 100%, rgba(240,192,64,0.06) 0%, transparent 55%);
   }
+
   /* ── Header ── */
-  header {
-    background: var(--header-bg);
-    border-bottom: 2px solid var(--border);
-    position: sticky; top: 0; z-index: 200;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
-  }
-  .header-inner {
-    max-width: 1440px; margin: 0 auto;
-    padding: 12px 20px;
-    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  }
-  #logoImg {
-    height: 52px; width: 52px; object-fit: contain; border-radius: 8px;
-    display: none;
-  }
-  #logoEmoji { font-size: 36px; line-height: 1; }
-  .header-titles { flex: 1; }
-  .header-titles h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(18px, 3vw, 26px);
-    font-weight: 900; letter-spacing: 0.5px;
-    color: var(--text);
-  }
-  .header-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .header-live {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(76,175,115,0.15); border: 1px solid var(--accent);
-    border-radius: 20px; padding: 2px 10px; font-size: 11px; color: var(--accent);
-    font-weight: 700; letter-spacing: 0.5px;
-  }
-  .live-dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
-    animation: pulse 1.5s infinite;
-  }
+  header { background:var(--header-bg); border-bottom:2px solid var(--border); position:sticky; top:0; z-index:200; box-shadow:0 4px 30px rgba(0,0,0,0.5); }
+  .header-inner { max-width:1440px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  #logoImg { height:104px; width:104px; object-fit:contain; border-radius:10px; display:none; }
+  #logoEmoji { font-size:36px; line-height:1; }
+  .header-titles { flex:1; }
+  .header-titles h1 { font-family:'Playfair Display',serif; font-size:clamp(18px,3vw,26px); font-weight:900; letter-spacing:0.5px; color:var(--text); }
+  .header-meta { font-size:12px; color:var(--muted); margin-top:2px; }
+  .header-live { display:inline-flex; align-items:center; gap:5px; background:rgba(76,175,115,0.15); border:1px solid var(--accent); border-radius:20px; padding:2px 10px; font-size:11px; color:var(--accent); font-weight:700; letter-spacing:0.5px; }
+  .live-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); animation:pulse 1.5s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-  .btn {
-    padding: 7px 14px; border-radius: 7px; cursor: pointer;
-    font-family: inherit; font-size: 13px; font-weight: 600;
-    border: 1px solid var(--border); background: var(--surface);
-    color: var(--text); transition: all 0.15s; white-space: nowrap;
-  }
-  .btn:hover { filter: brightness(1.2); }
-  .btn-primary { background: var(--accent); border-color: var(--accent); color: #0b1a10; }
-  .btn-danger  { background: rgba(224,82,82,0.15); border-color: var(--red); color: var(--red); }
-  .btn-gold    { background: rgba(240,192,64,0.15); border-color: var(--accent2); color: var(--accent2); }
-  /* ── Firebase Setup Banner ── */
-  #setupBanner {
-    background: linear-gradient(135deg, #1a2a10 0%, #0e2016 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 0;
-    position: relative; z-index: 1;
-  }
-  .setup-inner {
-    max-width: 1440px; margin: 0 auto; padding: 20px;
-  }
-  .setup-inner h2 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 6px; color: var(--accent); }
-  .setup-inner p { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
-  .setup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 14px; }
-  .setup-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
-  .setup-field input {
-    width: 100%; padding: 8px 10px; border-radius: 6px;
-    background: var(--bg); border: 1px solid var(--border);
-    color: var(--text); font-family: inherit; font-size: 13px; outline: none;
-  }
-  .setup-steps { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
-  .setup-steps a { color: var(--accent); }
-  .setup-steps code {
-    background: var(--surface); padding: 1px 5px; border-radius: 3px;
-    font-size: 11px; color: var(--accent2);
-  }
+  .header-actions { display:flex; gap:8px; flex-wrap:wrap; }
+
+  /* ── Buttons ── */
+  .btn { padding:7px 14px; border-radius:7px; cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; border:1px solid var(--border); background:var(--surface); color:var(--text); transition:all 0.15s; white-space:nowrap; }
+  .btn:hover { filter:brightness(1.2); }
+  .btn-primary { background:var(--accent); border-color:var(--accent); color:#0b1a10; }
+  .btn-danger  { background:rgba(224,82,82,0.15); border-color:var(--red); color:var(--red); }
+  .btn-gold    { background:rgba(240,192,64,0.15); border-color:var(--accent2); color:var(--accent2); }
+
+  /* ── Setup banner ── */
+  #setupBanner { display:none; background:linear-gradient(135deg,#1a2a10 0%,#0e2016 100%); border-bottom:1px solid var(--border); position:relative; z-index:1; }
+  .setup-inner { max-width:1440px; margin:0 auto; padding:24px 20px; }
+  .setup-inner h2 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:6px; color:var(--accent); }
+  .setup-inner > p { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.6; }
+  .setup-steps { font-size:12px; color:var(--muted); line-height:1.9; margin-bottom:16px; }
+  .setup-steps a { color:var(--accent); }
+  .setup-steps code { background:var(--surface); padding:1px 5px; border-radius:3px; font-size:11px; color:var(--accent2); }
+  .setup-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; margin-bottom:16px; }
+  .setup-field label { display:block; font-size:11px; color:var(--muted); margin-bottom:4px; letter-spacing:0.5px; text-transform:uppercase; }
+  .setup-field input { width:100%; padding:8px 10px; border-radius:6px; background:var(--bg); border:1px solid var(--border); color:var(--text); font-family:inherit; font-size:13px; outline:none; }
+  .setup-note { margin-top:16px; padding:14px 16px; border-radius:8px; background:rgba(240,192,64,0.08); border:1px solid rgba(240,192,64,0.3); font-size:12px; color:var(--accent2); line-height:1.8; display:none; }
+  .setup-note code { background:rgba(0,0,0,0.3); padding:1px 5px; border-radius:3px; font-family:monospace; }
+
   /* ── Main ── */
-  main { max-width: 1440px; margin: 0 auto; padding: 20px 16px; position: relative; z-index: 1; }
-  /* ── Stats bar ── */
-  .stats-bar {
-    display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
-  }
-  .stat-pill {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 30px; padding: 6px 16px; font-size: 13px;
-  }
-  .stat-pill span { color: var(--muted); margin-right: 4px; }
-  /* ── Grid ── */
-  .rinks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 14px;
-  }
-  /* ── Rink Card ── */
-  .rink-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px;
-    transition: box-shadow 0.2s;
-  }
-  .rink-card.complete { border-color: var(--accent); box-shadow: 0 0 18px rgba(76,175,115,0.12); }
-  .rink-card-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
-  }
-  .rink-label {
-    font-family: 'Playfair Display', serif;
-    font-size: 13px; font-weight: 700; color: var(--blue); letter-spacing: 1px; text-transform: uppercase;
-  }
-  .badge {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
-    padding: 2px 9px; border-radius: 20px;
-  }
-  .badge-final  { background: var(--accent); color: #0b1a10; }
-  .badge-live   { background: rgba(240,192,64,0.2); color: var(--accent2); border: 1px solid var(--accent2); }
-  .badge-waiting{ color: var(--muted); border: 1px solid var(--border); }
-  /* Teams */
-  .teams-row { display: flex; gap: 6px; align-items: stretch; margin-bottom: 10px; }
-  .team-block {
-    flex: 1; padding: 10px 10px 8px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.025);
-    border-top: 3px solid var(--border);
-  }
-  .team-block.team-a { border-top-color: var(--accent); }
-  .team-block.team-b { border-top-color: var(--accent2); text-align: right; }
-  .team-name { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-  .team-players { font-size: 11px; color: var(--muted); margin-bottom: 8px; line-height: 1.3; }
-  .big-score { font-size: 38px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; font-family: 'Playfair Display', serif; }
-  .score-winner { color: var(--accent); }
-  .score-loser  { color: var(--muted); }
-  .score-tie    { color: var(--text); }
-  .vs-divider { display: flex; align-items: center; justify-content: center; padding: 0 2px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: 1px; }
-  /* Progress */
-  .progress-bar { height: 3px; background: var(--border); border-radius: 3px; margin-bottom: 10px; overflow: hidden; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--accent)); border-radius: 3px; transition: width 0.5s ease; }
-  /* End grid */
-  .end-grid { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
-  .end-cell {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 5px; padding: 3px 6px; min-width: 34px; text-align: center;
-  }
-  .end-cell-num { font-size: 9px; color: var(--muted); }
-  .end-cell-scores { font-size: 12px; font-weight: 700; display: flex; gap: 2px; justify-content: center; align-items: center; }
-  .end-cell-sep { font-size: 9px; color: var(--border); }
-  /* Edit btn */
-  .edit-btn {
-    width: 100%; padding: 8px; border-radius: 7px; cursor: pointer;
-    background: rgba(91,164,207,0.1); border: 1px solid var(--blue);
-    color: var(--blue); font-family: inherit; font-size: 13px; font-weight: 600;
-    transition: background 0.15s;
-  }
-  .edit-btn:hover { background: rgba(91,164,207,0.2); }
+  main { max-width:1440px; margin:0 auto; padding:20px 16px; position:relative; z-index:1; }
+  .stats-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-pill { background:var(--surface); border:1px solid var(--border); border-radius:30px; padding:6px 16px; font-size:13px; }
+  .stat-pill span { color:var(--muted); margin-right:4px; }
+  .rinks-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+
+  /* ── Rink card ── */
+  .rink-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; transition:box-shadow 0.2s; }
+  .rink-card.complete { border-color:var(--accent); box-shadow:0 0 18px rgba(76,175,115,0.12); }
+  .rink-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .rink-label { font-family:'Playfair Display',serif; font-size:13px; font-weight:700; color:var(--blue); letter-spacing:1px; text-transform:uppercase; }
+  .badge { font-size:10px; font-weight:700; letter-spacing:0.5px; padding:2px 9px; border-radius:20px; }
+  .badge-final  { background:var(--accent); color:#0b1a10; }
+  .badge-live   { background:rgba(240,192,64,0.2); color:var(--accent2); border:1px solid var(--accent2); }
+  .badge-waiting{ color:var(--muted); border:1px solid var(--border); }
+  .teams-row { display:flex; gap:6px; align-items:stretch; margin-bottom:10px; }
+  .team-block { flex:1; padding:10px 10px 8px; border-radius:8px; background:rgba(255,255,255,0.025); border-top:3px solid var(--border); }
+  .team-block.team-a { border-top-color:var(--accent); }
+  .team-block.team-b { border-top-color:var(--accent2); text-align:right; }
+  .team-name { font-size:12px; font-weight:700; margin-bottom:2px; }
+  .team-players { font-size:11px; color:var(--muted); margin-bottom:8px; line-height:1.3; }
+  .big-score { font-size:38px; font-weight:900; line-height:1; font-variant-numeric:tabular-nums; font-family:'Playfair Display',serif; }
+  .score-winner { color:var(--accent); }
+  .score-loser  { color:var(--muted); }
+  .score-tie    { color:var(--text); }
+  .vs-divider { display:flex; align-items:center; justify-content:center; padding:0 2px; color:var(--muted); font-size:10px; font-weight:700; letter-spacing:1px; }
+  .progress-bar { height:3px; background:var(--border); border-radius:3px; margin-bottom:10px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--blue),var(--accent)); border-radius:3px; transition:width 0.5s ease; }
+  .end-grid { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:12px; }
+  .end-cell { background:var(--surface); border:1px solid var(--border); border-radius:5px; padding:3px 6px; min-width:34px; text-align:center; }
+  .end-cell-num { font-size:9px; color:var(--muted); }
+  .end-cell-scores { font-size:12px; font-weight:700; display:flex; gap:2px; justify-content:center; align-items:center; }
+  .end-cell-sep { font-size:9px; color:var(--border); }
+  .edit-btn { width:100%; padding:8px; border-radius:7px; cursor:pointer; background:rgba(91,164,207,0.1); border:1px solid var(--blue); color:var(--blue); font-family:inherit; font-size:13px; font-weight:600; transition:background 0.15s; }
+  .edit-btn:hover { background:rgba(91,164,207,0.2); }
+
   /* ── Modals ── */
-  .overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-    z-index: 500; display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(5px); padding: 16px;
-  }
-  .modal {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 26px; width: 100%; max-width: 420px;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.7); max-height: 90vh; overflow-y: auto;
-  }
-  .modal-lg { max-width: 620px; }
-  .modal-xl { max-width: 780px; }
-  .modal h2 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; }
-  .modal-sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.5px; text-transform: uppercase; }
-  .field input, .field select {
-    width: 100%; padding: 9px 11px; border-radius: 7px;
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-family: inherit; font-size: 14px; outline: none;
-    transition: border-color 0.15s;
-  }
-  .field input:focus, .field select:focus { border-color: var(--accent); }
-  .modal-row { display: flex; gap: 10px; margin-top: 18px; }
-  .modal-row .btn { flex: 1; text-align: center; }
-  /* PIN input */
-  #pinInput {
-    width: 100%; padding: 14px; text-align: center;
-    background: var(--surface); border: 2px solid var(--border);
-    color: var(--text); border-radius: 8px; font-size: 28px;
-    letter-spacing: 10px; font-family: inherit; outline: none;
-    transition: border-color 0.2s;
-  }
-  #pinInput.error { border-color: var(--red); animation: shake 0.3s; }
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:500; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px); padding:16px; }
+  .modal { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:26px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,0.7); max-height:90vh; overflow-y:auto; }
+  .modal-lg { max-width:620px; }
+  .modal-xl { max-width:780px; }
+  .modal h2 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:4px; }
+  .modal-sub { color:var(--muted); font-size:13px; margin-bottom:20px; }
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:11px; color:var(--muted); margin-bottom:5px; letter-spacing:0.5px; text-transform:uppercase; }
+  .field input { width:100%; padding:9px 11px; border-radius:7px; background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:inherit; font-size:14px; outline:none; transition:border-color 0.15s; }
+  .field input:focus { border-color:var(--accent); }
+  .modal-row { display:flex; gap:10px; margin-top:18px; }
+  .modal-row .btn { flex:1; text-align:center; }
+
+  /* PIN */
+  #pinInput { width:100%; padding:14px; text-align:center; background:var(--surface); border:2px solid var(--border); color:var(--text); border-radius:8px; font-size:28px; letter-spacing:10px; font-family:inherit; outline:none; transition:border-color 0.2s; }
+  #pinInput.error { border-color:var(--red); animation:shake 0.3s; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-  .pin-hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
+  .pin-hint { font-size:11px; color:var(--muted); text-align:center; margin-top:8px; }
+
   /* Score entry */
-  .end-entry-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 0; border-bottom: 1px solid var(--border);
-  }
-  .end-entry-label { width: 52px; font-size: 12px; color: var(--muted); }
-  .end-entry-input {
-    width: 60px; text-align: center; padding: 7px 6px;
-    background: var(--surface); border: 2px solid var(--border);
-    color: var(--text); border-radius: 6px; font-size: 16px;
-    font-weight: 700; font-family: inherit; outline: none;
-  }
-  .end-entry-input.team-a-in { border-color: var(--accent); }
-  .end-entry-input.team-b-in { border-color: var(--accent2); }
-  .end-entry-sep { color: var(--muted); font-weight: 700; }
-  .entry-totals {
-    display: flex; justify-content: center; align-items: center;
-    gap: 16px; padding: 14px; background: var(--surface); border-radius: 8px; margin: 12px 0;
-  }
-  .entry-total-score { font-size: 28px; font-weight: 900; font-family: 'Playfair Display', serif; }
-  /* Theme editor */
-  .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 18px; }
-  .color-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.3px; }
-  .color-row { display: flex; align-items: center; gap: 8px; }
-  .color-row input[type=color] {
-    width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border);
-    background: none; cursor: pointer; padding: 2px;
-  }
-  .color-row input[type=text] {
-    flex: 1; padding: 7px 8px; border-radius: 6px;
-    background: var(--surface); border: 1px solid var(--border);
-    color: var(--text); font-family: monospace; font-size: 13px; outline: none;
-  }
+  .end-entry-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); }
+  .end-entry-label { width:52px; font-size:12px; color:var(--muted); }
+  .end-entry-input { width:60px; text-align:center; padding:7px 6px; background:var(--surface); border:2px solid var(--border); color:var(--text); border-radius:6px; font-size:16px; font-weight:700; font-family:inherit; outline:none; }
+  .end-entry-input.team-a-in { border-color:var(--accent); }
+  .end-entry-input.team-b-in { border-color:var(--accent2); }
+  .end-entry-sep { color:var(--muted); font-weight:700; }
+  .entry-totals { display:flex; justify-content:center; align-items:center; gap:16px; padding:14px; background:var(--surface); border-radius:8px; margin:12px 0; }
+  .entry-total-score { font-size:28px; font-weight:900; font-family:'Playfair Display',serif; }
+
+  /* Theme */
+  .theme-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-bottom:18px; }
+  .color-field label { display:block; font-size:11px; color:var(--muted); margin-bottom:5px; }
+  .color-row { display:flex; align-items:center; gap:8px; }
+  .color-row input[type=color] { width:36px; height:36px; border-radius:6px; border:1px solid var(--border); background:none; cursor:pointer; padding:2px; }
+  .color-row input[type=text]  { flex:1; padding:7px 8px; border-radius:6px; background:var(--surface); border:1px solid var(--border); color:var(--text); font-family:monospace; font-size:13px; outline:none; }
+
   /* Logo upload */
-  .logo-upload-area {
-    border: 2px dashed var(--border); border-radius: 10px;
-    padding: 20px; text-align: center; cursor: pointer;
-    transition: border-color 0.2s; margin-bottom: 14px;
-  }
-  .logo-upload-area:hover { border-color: var(--accent); }
-  .logo-preview { max-height: 80px; max-width: 200px; border-radius: 6px; margin: 8px auto 0; display: block; }
-  /* Rink setup inside session modal */
-  .rink-setup-block {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; padding: 14px; margin-bottom: 10px;
-  }
-  .rink-setup-title { font-size: 13px; color: var(--blue); font-weight: 700; margin-bottom: 10px; }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  /* Footer */
-  footer {
-    text-align: center; padding: 18px; color: var(--muted); font-size: 12px;
-    border-top: 1px solid var(--border); position: relative; z-index: 1;
-    margin-top: 20px;
-  }
-  /* Notification toast */
-  #toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
-    background: var(--accent); color: #0b1a10; padding: 10px 24px; border-radius: 30px;
-    font-weight: 700; font-size: 14px; z-index: 9999;
-    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-    pointer-events: none; white-space: nowrap;
-  }
-  #toast.show { transform: translateX(-50%) translateY(0); }
-  /* Responsive */
-  @media (max-width: 600px) {
-    .header-inner { padding: 10px 14px; }
-    .header-actions .btn span { display: none; }
-    .modal { padding: 18px; }
-  }
+  .logo-upload-area { border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; transition:border-color 0.2s; margin-bottom:14px; }
+  .logo-upload-area:hover { border-color:var(--accent); }
+  .logo-preview { max-height:80px; max-width:200px; border-radius:6px; margin:8px auto 0; display:block; }
+
+  /* Session setup */
+  .rink-setup-block { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
+  .rink-setup-title { font-size:13px; color:var(--blue); font-weight:700; margin-bottom:10px; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  footer { text-align:center; padding:18px; color:var(--muted); font-size:12px; border-top:1px solid var(--border); position:relative; z-index:1; margin-top:20px; }
+  #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--accent); color:#0b1a10; padding:10px 24px; border-radius:30px; font-weight:700; font-size:14px; z-index:9999; transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); pointer-events:none; white-space:nowrap; }
+  #toast.show { transform:translateX(-50%) translateY(0); }
+  @media (max-width:600px) { .header-inner{padding:10px 14px;} .header-actions .btn span{display:none;} .modal{padding:18px;} }
 </style>
 </head>
 <body>
 
-<!-- ── HEADER ─────────────────────────────────── -->
 <header>
   <div class="header-inner">
     <img id="logoImg" src="" alt="Club Logo">
@@ -301,17 +160,15 @@
     <div class="header-titles">
       <h1 id="headerTitle">Lawn Bowling Scorer</h1>
       <div class="header-meta">
-        <span id="statsSummary">Loading…</span>
-        &nbsp;·&nbsp;
+        <span id="statsSummary">Connecting…</span> &nbsp;·&nbsp;
         <span class="header-live"><span class="live-dot"></span> LIVE</span>
       </div>
     </div>
     <div class="header-actions">
-      <div id="adminActions" style="display:none; gap:8px; display:none; flex-wrap:wrap;">
+      <div id="adminActions" style="display:none; flex-wrap:wrap; gap:8px;">
         <button class="btn btn-gold" onclick="openSession()">⚙ <span>Session</span></button>
         <button class="btn" onclick="openTheme()">🎨 <span>Theme</span></button>
         <button class="btn btn-danger" onclick="confirmReset()">↺ <span>Reset</span></button>
-        <button class="btn" onclick="disconnectFirebase()" id="disconnectBtn" style="display:none;background:rgba(224,82,82,0.1);border-color:var(--red);color:var(--red)">🔥 Reconfigure</button>
         <button class="btn" onclick="lockAdmin()" style="background:rgba(76,175,115,0.1);border-color:var(--accent);color:var(--accent)">🔒</button>
       </div>
       <button class="btn" id="loginBtn" onclick="openPin()">🔑 <span>Scorer Login</span></button>
@@ -319,17 +176,16 @@
   </div>
 </header>
 
-<!-- ── FIREBASE CONFIG BANNER ─────────────────── -->
-<div id="setupBanner" style="display:none">
+<!-- Shown only when FIREBASE_CONFIG is empty in the file -->
+<div id="setupBanner">
   <div class="setup-inner">
-    <h2>🔥 Firebase Setup Required</h2>
-    <p>To enable live scores across all devices, connect to a free Firebase Realtime Database.<br>
-    Don't have one? Follow the steps below — it takes about 3 minutes.</p>
+    <h2>🔥 One-time Firebase Setup</h2>
+    <p>Enter your Firebase project details. After connecting, follow the instructions shown to bake the config into the file — all visitors will then auto-connect forever.</p>
     <div class="setup-steps">
-      1. Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → Create a project (disable Google Analytics is fine).<br>
-      2. In the left sidebar → <strong>Build → Realtime Database</strong> → Create database → choose <em>Start in test mode</em>.<br>
-      3. Click the ⚙ gear icon → <strong>Project settings</strong> → scroll to <em>Your apps</em> → click <code>&lt;/&gt;</code> Web → register app.<br>
-      4. Copy the config values into the fields below and click <strong>Connect</strong>.
+      1. Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → Create a project.<br>
+      2. Left sidebar → <strong>Build → Realtime Database</strong> → Create database → <em>Start in test mode</em>.<br>
+      3. ⚙ gear → <strong>Project settings</strong> → <em>Your apps</em> → click <code>&lt;/&gt;</code> Web → register app.<br>
+      4. Copy the config values below and click <strong>Connect</strong>.
     </div>
     <div class="setup-grid">
       <div class="setup-field"><label>API Key</label><input id="fb_apiKey" placeholder="AIzaSy…"></div>
@@ -340,31 +196,25 @@
       <div class="setup-field"><label>Messaging Sender ID</label><input id="fb_messagingSenderId" placeholder="123456789"></div>
       <div class="setup-field"><label>App ID</label><input id="fb_appId" placeholder="1:123…:web:abc…"></div>
     </div>
-    <button class="btn btn-primary" onclick="connectFirebase()">🔥 Connect to Firebase</button>
-    <button class="btn" onclick="useLocalMode()" style="margin-left:8px">Use Local Mode (this device only)</button>
+    <button class="btn btn-primary" onclick="connectFirebase()">🔥 Connect</button>
+    <button class="btn" onclick="useLocalMode()" style="margin-left:8px">Local Mode (this device only)</button>
+    <div class="setup-note" id="setupNote"></div>
   </div>
 </div>
 
-<!-- ── MAIN ───────────────────────────────────── -->
 <main id="mainApp" style="display:none">
   <div class="stats-bar" id="statsBar"></div>
   <div class="rinks-grid" id="rinksGrid"></div>
 </main>
-
 <footer id="footerBar" style="display:none">
-  Lawn Bowling Scorer · <span id="modeLabel">Local mode</span> · <span id="adminLabel">View only</span>
+  Lawn Bowling Scorer &nbsp;·&nbsp; <span id="modeLabel">Connecting…</span> &nbsp;·&nbsp; <span id="adminLabel">View only</span>
 </footer>
-
-<!-- ── TOAST ──────────────────────────────────── -->
 <div id="toast"></div>
 
-<!-- ── MODALS ─────────────────────────────────── -->
-
-<!-- PIN -->
+<!-- PIN modal -->
 <div class="overlay" id="pinModal" style="display:none" onclick="if(event.target===this)closeModal('pinModal')">
   <div class="modal">
-    <h2>Scorer Access</h2>
-    <p class="modal-sub">Enter PIN to edit scores &amp; settings</p>
+    <h2>Scorer Access</h2><p class="modal-sub">Enter PIN to edit scores &amp; settings</p>
     <input type="password" id="pinInput" maxlength="8" placeholder="••••"
       oninput="clearPinError()" onkeydown="if(event.key==='Enter')submitPin()">
     <div id="pinError" style="color:var(--red);font-size:13px;text-align:center;margin-top:8px;min-height:18px"></div>
@@ -376,7 +226,7 @@
   </div>
 </div>
 
-<!-- Score Entry -->
+<!-- Score entry modal -->
 <div class="overlay" id="scoreModal" style="display:none" onclick="if(event.target===this)closeModal('scoreModal')">
   <div class="modal modal-lg" onclick="event.stopPropagation()">
     <h2 id="scoreModalTitle">Rink Score Entry</h2>
@@ -384,7 +234,7 @@
     <div style="max-height:42vh;overflow-y:auto;margin-bottom:10px" id="scoreEntryList"></div>
     <div style="display:flex;gap:8px;margin-bottom:12px;justify-content:center">
       <button class="btn" onclick="removeEnd()">− Remove End</button>
-      <button class="btn btn-primary" onclick="addEnd()" id="addEndBtn">+ Add End</button>
+      <button class="btn btn-primary" id="addEndBtn" onclick="addEnd()">+ Add End</button>
     </div>
     <div class="entry-totals">
       <div style="text-align:center">
@@ -404,11 +254,10 @@
   </div>
 </div>
 
-<!-- Session Setup -->
+<!-- Session setup modal -->
 <div class="overlay" id="sessionModal" style="display:none" onclick="if(event.target===this)closeModal('sessionModal')">
   <div class="modal modal-xl" onclick="event.stopPropagation()">
-    <h2>Session Setup</h2>
-    <p class="modal-sub">Configure the session title, number of ends, rinks, team names and players.</p>
+    <h2>Session Setup</h2><p class="modal-sub">Configure title, ends, rinks, team names and players.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
       <div class="field"><label>Session Title</label><input id="sess_title"></div>
       <div class="field"><label>Number of Ends</label><input id="sess_ends" type="number" min="1" max="30"></div>
@@ -423,15 +272,15 @@
   </div>
 </div>
 
-<!-- Theme Editor -->
+<!-- Theme modal -->
 <div class="overlay" id="themeModal" style="display:none" onclick="if(event.target===this)closeModal('themeModal')">
   <div class="modal modal-lg" onclick="event.stopPropagation()">
     <h2>🎨 Theme &amp; Branding</h2>
-    <p class="modal-sub">Customize colors and upload your club logo.</p>
+    <p class="modal-sub">Customise colours and upload your club logo. Changes are saved to the server and visible to all visitors instantly.</p>
     <div class="field">
       <label>Club Logo</label>
       <div class="logo-upload-area" onclick="document.getElementById('logoUpload').click()">
-        <div style="color:var(--muted);font-size:13px">Click to upload logo (PNG, JPG, SVG)</div>
+        <div style="color:var(--muted);font-size:13px">Click to upload logo (PNG, JPG, SVG · max ~1MB recommended)</div>
         <img id="logoPreview" class="logo-preview" style="display:none">
       </div>
       <input type="file" id="logoUpload" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
@@ -440,179 +289,126 @@
     <div class="modal-row">
       <button class="btn" onclick="resetTheme()">Reset Defaults</button>
       <button class="btn" onclick="closeModal('themeModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveTheme()">Apply Theme</button>
+      <button class="btn btn-primary" onclick="saveTheme()">💾 Save to Server</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════ -->
 <script type="module">
-// ── Firebase SDK ──────────────────────────────────────────────────────────────
 import { initializeApp, getApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ═══════════════════════════════════════════════════════════════════════════════
+//  FIREBASE CONFIG
+//  Paste your Firebase project values here, then re-upload to GitHub.
+//  All visitors will auto-connect. Theme, logo & session all live in Firebase.
+// ═══════════════════════════════════════════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey:            "",
+  authDomain:        "",
+  databaseURL:       "",
+  projectId:         "",
+  storageBucket:     "",
+  messagingSenderId: "",
+  appId:             "",
+};
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // ── State ─────────────────────────────────────────────────────────────────────
-const LS_CONFIG  = "lb_firebase_config";
-const LS_THEME   = "lb_theme";
-const LS_LOCAL   = "lb_local_session";
-const LS_PIN     = "lb_pin";
-
-let db = null;
-let localMode = false;
-let isAdmin = false;
-let session = null;         // { title, totalEnds, rinks[], pin }
-let editingRinkId = null;
-let editScores = [];        // working copy during score entry
-let pendingTheme = {};
-let pendingLogo = null;
+let db = null, localMode = false, isAdmin = false;
+let session = null, appConfig = null;
+let editingRinkId = null, editScores = [];
+let pendingTheme = {}, pendingLogoBase64 = null;
 
 const DEFAULT_THEME = {
-  "--bg":       "#0b1a10",
-  "--surface":  "#122018",
-  "--card":     "#162a1e",
-  "--border":   "#1f3d2a",
-  "--accent":   "#4caf73",
-  "--accent2":  "#f0c040",
-  "--red":      "#e05252",
-  "--blue":     "#5ba4cf",
-  "--text":     "#e8f0ea",
-  "--muted":    "#5a8a6a",
-  "--header-bg":"#0e2016",
+  "--bg":"#0b1a10","--surface":"#122018","--card":"#162a1e","--border":"#1f3d2a",
+  "--accent":"#4caf73","--accent2":"#f0c040","--red":"#e05252","--blue":"#5ba4cf",
+  "--text":"#e8f0ea","--muted":"#5a8a6a","--header-bg":"#0e2016",
 };
-
 const THEME_LABELS = {
-  "--bg":        "Page Background",
-  "--surface":   "Surface",
-  "--card":      "Card Background",
-  "--border":    "Border",
-  "--accent":    "Team A Colour",
-  "--accent2":   "Team B Colour",
-  "--blue":      "Highlight",
-  "--text":      "Text",
-  "--muted":     "Muted Text",
-  "--header-bg": "Header Background",
+  "--bg":"Page Background","--surface":"Surface","--card":"Card Background",
+  "--border":"Border","--accent":"Team A Colour","--accent2":"Team B Colour",
+  "--blue":"Highlight","--text":"Text","--muted":"Muted Text","--header-bg":"Header Background",
 };
-
 const DEFAULT_SESSION = () => ({
-  title: "Lawn Bowling",
-  totalEnds: 12,
-  pin: "1234",
-  rinks: Array.from({length: 9}, (_,i) => ({
-    id: i+1,
-    teamA: { name: `Rink ${i+1} — Red`, players: ["Player 1","Player 2"] },
-    teamB: { name: `Rink ${i+1} — Blue`, players: ["Player 3","Player 4"] },
-    scores: [],
+  title:"Lawn Bowling", totalEnds:12, pin:"1234",
+  rinks: Array.from({length:9},(_,i)=>({
+    id:i+1,
+    teamA:{name:`Rink ${i+1} — Red`, players:["Player 1","Player 2"]},
+    teamB:{name:`Rink ${i+1} — Blue`,players:["Player 3","Player 4"]},
+    scores:[],
   }))
 });
+const DEFAULT_CONFIG = () => ({ theme: DEFAULT_THEME, logo: null });
 
-// ── Theme ─────────────────────────────────────────────────────────────────────
-function applyTheme(theme) {
-  const t = { ...DEFAULT_THEME, ...theme };
-  Object.entries(t).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
+// ── Theme helpers ─────────────────────────────────────────────────────────────
+function applyTheme(t) {
+  const m = { ...DEFAULT_THEME, ...t };
+  Object.entries(m).forEach(([k,v]) => document.documentElement.style.setProperty(k,v));
 }
 
-function loadTheme() {
-  try { return JSON.parse(localStorage.getItem(LS_THEME) || "{}"); } catch { return {}; }
+function applyLogo(base64) {
+  if (!base64) return;
+  const img = el("logoImg"), em = el("logoEmoji");
+  img.src = base64; img.style.display = "block"; em.style.display = "none";
 }
 
-function saveThemeLS(theme) {
-  localStorage.setItem(LS_THEME, JSON.stringify(theme));
-}
-
-// ── Firebase Connect ──────────────────────────────────────────────────────────
-async function doConnectFirebase(cfg, showToast) {
-  // Use a fixed app name — if already initialized, retrieve the existing instance
+// ── Firebase init ─────────────────────────────────────────────────────────────
+function initFB(cfg) {
   let app;
-  try {
-    app = initializeApp(cfg, "lb-scorer");
-  } catch(e) {
-    app = getApp("lb-scorer");
-  }
-  db = getDatabase(app);
-  localMode = false;
-  document.getElementById("modeLabel").textContent = "🔥 Firebase live";
-  document.getElementById("disconnectBtn").style.display = "";
-  hideBanner(); showApp();
-  subscribeFirebase();
-  if (showToast) toast("🔥 Connected to Firebase!");
+  try   { app = initializeApp(cfg, "lb-scorer"); }
+  catch { app = getApp("lb-scorer"); }
+  return getDatabase(app);
 }
-
-// Called from the setup banner button
-window.connectFirebase = async function() {
-  const cfg = {
-    apiKey:            document.getElementById("fb_apiKey").value.trim(),
-    authDomain:        document.getElementById("fb_authDomain").value.trim(),
-    databaseURL:       document.getElementById("fb_dbUrl").value.trim(),
-    projectId:         document.getElementById("fb_projectId").value.trim(),
-    storageBucket:     document.getElementById("fb_storageBucket").value.trim(),
-    messagingSenderId: document.getElementById("fb_messagingSenderId").value.trim(),
-    appId:             document.getElementById("fb_appId").value.trim(),
-  };
-  if (!cfg.apiKey || !cfg.databaseURL) {
-    alert("API Key and Database URL are required."); return;
-  }
-  try {
-    await doConnectFirebase(cfg, true);
-    // Only persist after a successful connection
-    localStorage.setItem(LS_CONFIG, JSON.stringify(cfg));
-  } catch(e) {
-    console.error(e);
-    alert("Firebase connection failed: " + e.message);
-  }
-};
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-(async function boot() {
-  applyTheme(loadTheme());
-  const savedLogo = localStorage.getItem("lb_logo");
-  if (savedLogo) setLogo(savedLogo);
+(function boot() {
+  // Apply default theme immediately so page looks right before Firebase responds
+  applyTheme(DEFAULT_THEME);
 
-  const savedConfig = localStorage.getItem(LS_CONFIG);
-  if (savedConfig) {
+  const hasCfg = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.databaseURL;
+
+  if (hasCfg) {
     try {
-      const cfg = JSON.parse(savedConfig);
-      await doConnectFirebase(cfg, false);
-      return; // Successfully reconnected — stop here, don't show banner
+      db = initFB(FIREBASE_CONFIG);
+      localMode = false;
+      el("modeLabel").textContent = "🔥 Firebase live";
+      showApp();
+      subscribeAll(); // subscribes to both /session and /config (theme + logo)
     } catch(e) {
-      console.error("Auto-reconnect failed:", e);
-      // Show banner so user can retry or switch to local mode
-      showBanner();
-      return;
+      console.error("Firebase init failed:", e);
+      startLocal("Firebase error — running in local mode.");
     }
+    return;
   }
 
-  const localData = localStorage.getItem(LS_LOCAL);
-  if (localData) {
-    try { useLocalMode(true); return; } catch(e) { console.error(e); }
-  }
-
-  // Nothing saved — show the setup banner
+  // No baked-in config — show setup banner
   showBanner();
 })();
 
-function subscribeFirebase() {
-  const sessionRef = ref(db, "session");
-  onValue(sessionRef, snap => {
+// ── Subscribe to Firebase paths ───────────────────────────────────────────────
+function subscribeAll() {
+  // Session data (scores, rinks, title, ends, pin)
+  onValue(ref(db, "session"), snap => {
+    let data = snap.val();
+    if (!data) { initFirebaseSession(); return; }
+    if (data.rinks && !Array.isArray(data.rinks)) data.rinks = Object.values(data.rinks);
+    data.rinks = (data.rinks || []).map(r => {
+      if (r.scores && !Array.isArray(r.scores)) r.scores = Object.values(r.scores);
+      r.scores = r.scores || [];
+      return r;
+    });
+    session = data;
+    renderAll();
+  });
+
+  // App config (theme colours + logo) — stored separately so score updates
+  // don't overwrite theme and vice versa
+  onValue(ref(db, "config"), snap => {
     const data = snap.val();
-    if (data) {
-      // Firebase may deserialize arrays as objects with numeric keys — normalize
-      if (data.rinks && !Array.isArray(data.rinks)) {
-        data.rinks = Object.values(data.rinks);
-      }
-      data.rinks = (data.rinks || []).map(r => {
-        // Normalize scores array too
-        if (r.scores && !Array.isArray(r.scores)) {
-          r.scores = Object.values(r.scores);
-        }
-        r.scores = r.scores || [];
-        return r;
-      });
-      session = data;
-      renderAll();
-    } else {
-      initFirebaseSession();
-    }
+    appConfig = data || DEFAULT_CONFIG();
+    applyTheme(appConfig.theme || DEFAULT_THEME);
+    if (appConfig.logo) applyLogo(appConfig.logo);
   });
 }
 
@@ -621,251 +417,243 @@ function initFirebaseSession() {
   set(ref(db, "session"), session);
 }
 
-// ── Local Mode ────────────────────────────────────────────────────────────────
-window.useLocalMode = function(silent) {
+// ── Local mode (fallback only — no Firebase) ──────────────────────────────────
+window.useLocalMode = function() {
   localMode = true;
-  document.getElementById("modeLabel").textContent = "Local (this device only)";
+  el("modeLabel").textContent = "⚠ Local (this device only)";
   hideBanner(); showApp();
-  try {
-    const d = localStorage.getItem(LS_LOCAL);
-    session = d ? JSON.parse(d) : DEFAULT_SESSION();
-  } catch { session = DEFAULT_SESSION(); }
+  session = DEFAULT_SESSION();
+  appConfig = DEFAULT_CONFIG();
+  applyTheme(DEFAULT_THEME);
   renderAll();
-  if (!silent) toast("Running in local mode — scores won't sync across devices.");
+  toast("Local mode — scores and settings won't sync to other devices.");
 };
 
-function saveLocal() {
-  if (localMode) localStorage.setItem(LS_LOCAL, JSON.stringify(session));
+function startLocal(msg) {
+  localMode = true;
+  el("modeLabel").textContent = "⚠ Local (this device only)";
+  hideBanner(); showApp();
+  session = DEFAULT_SESSION();
+  appConfig = DEFAULT_CONFIG();
+  applyTheme(DEFAULT_THEME);
+  renderAll();
+  if (msg) toast(msg);
 }
 
+// ── Manual Firebase connect (from banner) ─────────────────────────────────────
+window.connectFirebase = function() {
+  const cfg = {
+    apiKey:            el("fb_apiKey").value.trim(),
+    authDomain:        el("fb_authDomain").value.trim(),
+    databaseURL:       el("fb_dbUrl").value.trim(),
+    projectId:         el("fb_projectId").value.trim(),
+    storageBucket:     el("fb_storageBucket").value.trim(),
+    messagingSenderId: el("fb_messagingSenderId").value.trim(),
+    appId:             el("fb_appId").value.trim(),
+  };
+  if (!cfg.apiKey || !cfg.databaseURL) { alert("API Key and Database URL are required."); return; }
+  try {
+    db = initFB(cfg);
+    localMode = false;
+    el("modeLabel").textContent = "🔥 Firebase live";
+    hideBanner(); showApp(); subscribeAll(); toast("🔥 Connected!");
+    // Instructions to make it permanent
+    const note = el("setupNote");
+    note.style.display = "block";
+    note.innerHTML = `✅ <strong>Connected!</strong> To make this permanent for all visitors:<br>
+      1. Open <code>index.html</code> in a text editor.<br>
+      2. Find the <code>FIREBASE_CONFIG</code> block in the &lt;script&gt; section.<br>
+      3. Paste your 7 values into the empty quote marks.<br>
+      4. Save and re-upload to GitHub. Done — no one will ever see this screen again.`;
+  } catch(e) {
+    console.error(e); alert("Connection failed: " + e.message);
+  }
+};
+
+// ── Write helpers ─────────────────────────────────────────────────────────────
 function writeSession(data) {
   session = data;
-  if (localMode) { saveLocal(); renderAll(); }
-  else set(ref(db, "session"), data);
+  if (localMode) { renderAll(); return; }
+  set(ref(db, "session"), data);
+  // Firebase onValue will re-render via subscription
+}
+
+function writeConfig(data) {
+  appConfig = data;
+  if (localMode) {
+    applyTheme(data.theme || DEFAULT_THEME);
+    if (data.logo) applyLogo(data.logo);
+    return;
+  }
+  set(ref(db, "config"), data);
+  // Firebase onValue will re-apply theme/logo via subscription
 }
 
 function writeRinkScores(rinkId, scores) {
   const idx = session.rinks.findIndex(r => r.id === rinkId);
   if (idx < 0) return;
-  // Deep-copy scores to avoid reference issues
-  const scoresCopy = scores.map(s => ({ a: s.a || 0, b: s.b || 0 }));
-  // Write the full session to Firebase to avoid array-vs-object deserialization bugs
-  const updated = {
+  writeSession({
     ...session,
-    rinks: session.rinks.map((r, i) =>
-      i === idx ? { ...r, scores: scoresCopy } : r
-    )
-  };
-  writeSession(updated);
+    rinks: session.rinks.map((r,i) => i === idx ? { ...r, scores: scores.map(s=>({a:s.a||0,b:s.b||0})) } : r)
+  });
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderAll() {
   if (!session) return;
-  document.getElementById("headerTitle").textContent = session.title || "Lawn Bowling";
-  renderStats();
-  renderRinks();
+  el("headerTitle").textContent = session.title || "Lawn Bowling";
+  renderStats(); renderRinks();
 }
 
 function renderStats() {
-  const total    = session.rinks.length;
-  const finished = session.rinks.filter(r => r.scores.length >= session.totalEnds).length;
-  const inProg   = session.rinks.filter(r => r.scores.length > 0 && r.scores.length < session.totalEnds).length;
-  document.getElementById("statsSummary").textContent =
-    `${total} rinks · ${session.totalEnds} ends · ${finished} final · ${inProg} in progress`;
-
-  const bar = document.getElementById("statsBar");
-  bar.innerHTML = `
-    <div class="stat-pill"><span>Rinks:</span>${total}</div>
-    <div class="stat-pill"><span>Ends:</span>${session.totalEnds}</div>
-    <div class="stat-pill"><span>Final:</span>${finished}</div>
-    <div class="stat-pill"><span>In Progress:</span>${inProg}</div>
-    <div class="stat-pill"><span>Not Started:</span>${total - finished - inProg}</div>
-  `;
+  const tot = session.rinks.length;
+  const fin = session.rinks.filter(r => r.scores.length >= session.totalEnds).length;
+  const inp = session.rinks.filter(r => r.scores.length > 0 && r.scores.length < session.totalEnds).length;
+  el("statsSummary").textContent = `${tot} rinks · ${session.totalEnds} ends · ${fin} final · ${inp} in progress`;
+  el("statsBar").innerHTML =
+    `<div class="stat-pill"><span>Rinks:</span>${tot}</div>
+     <div class="stat-pill"><span>Ends:</span>${session.totalEnds}</div>
+     <div class="stat-pill"><span>Final:</span>${fin}</div>
+     <div class="stat-pill"><span>In Progress:</span>${inp}</div>
+     <div class="stat-pill"><span>Not Started:</span>${tot-fin-inp}</div>`;
 }
 
 function renderRinks() {
-  const grid = document.getElementById("rinksGrid");
-  grid.innerHTML = session.rinks.map(r => rinkCardHTML(r)).join("");
+  el("rinksGrid").innerHTML = session.rinks.map(rinkCardHTML).join("");
   if (isAdmin) {
     session.rinks.forEach(r => {
-      const btn = document.getElementById(`editBtn_${r.id}`);
-      if (btn) btn.addEventListener("click", () => openScoreEntry(r.id));
+      const b = document.getElementById(`eb_${r.id}`);
+      if (b) b.addEventListener("click", () => openScoreEntry(r.id));
     });
   }
 }
 
 function rinkCardHTML(rink) {
-  const totals = calcTotals(rink.scores);
-  const endsPlayed = rink.scores.length;
-  const complete = endsPlayed >= session.totalEnds;
-  const progress = session.totalEnds > 0 ? Math.min(100, (endsPlayed / session.totalEnds) * 100) : 0;
-  const winner = totals.a > totals.b ? "a" : totals.b > totals.a ? "b" : null;
-
-  const badge = complete
+  const tot = calcTotals(rink.scores), n = rink.scores.length;
+  const done = n >= session.totalEnds;
+  const pct  = session.totalEnds > 0 ? Math.min(100, (n / session.totalEnds) * 100) : 0;
+  const win  = tot.a > tot.b ? "a" : tot.b > tot.a ? "b" : null;
+  const badge = done
     ? `<span class="badge badge-final">FINAL</span>`
-    : endsPlayed > 0
-      ? `<span class="badge badge-live">End ${endsPlayed}/${session.totalEnds}</span>`
-      : `<span class="badge badge-waiting">Not Started</span>`;
-
-  const scoreClassA = winner === "a" ? "score-winner" : winner === "b" ? "score-loser" : "score-tie";
-  const scoreClassB = winner === "b" ? "score-winner" : winner === "a" ? "score-loser" : "score-tie";
-
-  const endCells = rink.scores.map((s,i) => `
-    <div class="end-cell">
+    : n > 0 ? `<span class="badge badge-live">End ${n}/${session.totalEnds}</span>`
+            : `<span class="badge badge-waiting">Not Started</span>`;
+  const cA = win==="a" ? "score-winner" : win==="b" ? "score-loser" : "score-tie";
+  const cB = win==="b" ? "score-winner" : win==="a" ? "score-loser" : "score-tie";
+  const cells = rink.scores.map((s,i) =>
+    `<div class="end-cell">
       <div class="end-cell-num">${i+1}</div>
       <div class="end-cell-scores">
-        <span style="color:${s.a>s.b?'var(--accent)':s.a<s.b?'var(--muted)':'var(--text)'}">${s.a}</span>
+        <span style="color:${s.a>s.b?"var(--accent)":s.a<s.b?"var(--muted)":"var(--text)"}">${s.a}</span>
         <span class="end-cell-sep">:</span>
-        <span style="color:${s.b>s.a?'var(--accent2)':s.b<s.a?'var(--muted)':'var(--text)'}">${s.b}</span>
+        <span style="color:${s.b>s.a?"var(--accent2)":s.b<s.a?"var(--muted)":"var(--text)"}">${s.b}</span>
       </div>
     </div>`).join("");
-
-  const editButton = isAdmin
-    ? `<button class="edit-btn" id="editBtn_${rink.id}">✎ Enter Scores</button>`
-    : "";
-
   return `
-    <div class="rink-card ${complete ? 'complete' : ''}">
-      <div class="rink-card-header">
-        <span class="rink-label">Rink ${rink.id}</span>${badge}
-      </div>
+    <div class="rink-card ${done?"complete":""}">
+      <div class="rink-card-header"><span class="rink-label">Rink ${rink.id}</span>${badge}</div>
       <div class="teams-row">
         <div class="team-block team-a">
           <div class="team-name">${esc(rink.teamA.name)}</div>
-          <div class="team-players">${rink.teamA.players.map(esc).join(' &amp; ')}</div>
-          <div class="big-score ${scoreClassA}">${totals.a}</div>
+          <div class="team-players">${rink.teamA.players.map(esc).join(" &amp; ")}</div>
+          <div class="big-score ${cA}">${tot.a}</div>
         </div>
         <div class="vs-divider">VS</div>
         <div class="team-block team-b">
           <div class="team-name">${esc(rink.teamB.name)}</div>
-          <div class="team-players">${rink.teamB.players.map(esc).join(' &amp; ')}</div>
-          <div class="big-score ${scoreClassB}">${totals.b}</div>
+          <div class="team-players">${rink.teamB.players.map(esc).join(" &amp; ")}</div>
+          <div class="big-score ${cB}">${tot.b}</div>
         </div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
-      <div class="end-grid">${endCells}</div>
-      ${editButton}
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="end-grid">${cells}</div>
+      ${isAdmin ? `<button class="edit-btn" id="eb_${rink.id}">✎ Enter Scores</button>` : ""}
     </div>`;
 }
 
-// ── Admin ─────────────────────────────────────────────────────────────────────
-window.openPin   = () => { document.getElementById("pinInput").value=""; document.getElementById("pinError").textContent=""; showModal("pinModal"); setTimeout(()=>document.getElementById("pinInput").focus(),100); };
-window.closeModal = id => document.getElementById(id).style.display="none";
-window.clearPinError = () => { document.getElementById("pinInput").classList.remove("error"); document.getElementById("pinError").textContent=""; };
+// ── Admin / PIN ───────────────────────────────────────────────────────────────
+window.openPin = () => {
+  el("pinInput").value = ""; el("pinError").textContent = "";
+  showModal("pinModal"); setTimeout(() => el("pinInput").focus(), 100);
+};
+window.closeModal  = id => el(id).style.display = "none";
+window.clearPinError = () => { el("pinInput").classList.remove("error"); el("pinError").textContent = ""; };
 
 window.submitPin = () => {
-  const pin = document.getElementById("pinInput").value;
-  const correct = session?.pin || "1234";
-  if (pin === correct) {
-    isAdmin = true;
-    closeModal("pinModal");
-    document.getElementById("adminActions").style.display = "flex";
-    document.getElementById("loginBtn").style.display = "none";
-    document.getElementById("adminLabel").textContent = "🟢 Scorer mode";
-    renderAll();
-    toast("Welcome, scorer!");
+  if (el("pinInput").value === (session?.pin || "1234")) {
+    isAdmin = true; closeModal("pinModal");
+    el("adminActions").style.display = "flex";
+    el("loginBtn").style.display = "none";
+    el("adminLabel").textContent = "🟢 Scorer mode";
+    renderAll(); toast("Welcome, scorer!");
   } else {
-    const inp = document.getElementById("pinInput");
-    inp.classList.add("error");
-    document.getElementById("pinError").textContent = "Incorrect PIN";
-    inp.value = "";
-    setTimeout(() => inp.classList.remove("error"), 600);
+    el("pinInput").classList.add("error");
+    el("pinError").textContent = "Incorrect PIN";
+    el("pinInput").value = "";
+    setTimeout(() => el("pinInput").classList.remove("error"), 600);
   }
 };
 
 window.lockAdmin = () => {
   isAdmin = false;
-  document.getElementById("adminActions").style.display = "none";
-  document.getElementById("loginBtn").style.display = "";
-  document.getElementById("adminLabel").textContent = "View only";
-  renderAll();
-  toast("Locked.");
+  el("adminActions").style.display = "none";
+  el("loginBtn").style.display = "";
+  el("adminLabel").textContent = "View only";
+  renderAll(); toast("Locked.");
 };
 
-window.disconnectFirebase = () => {
-  if (confirm("Clear saved Firebase config and return to setup screen?")) {
-    localStorage.removeItem(LS_CONFIG);
-    location.reload();
-  }
-};
-
-// ── Score Entry ───────────────────────────────────────────────────────────────
-window.openScoreEntry = (rinkId) => {
-  const rink = session.rinks.find(r => r.id === rinkId);
-  if (!rink) return;
+// ── Score entry ───────────────────────────────────────────────────────────────
+window.openScoreEntry = rinkId => {
+  const rink = session.rinks.find(r => r.id === rinkId); if (!rink) return;
   editingRinkId = rinkId;
   editScores = rink.scores.map(s => ({...s}));
-  document.getElementById("scoreModalTitle").textContent = `Rink ${rink.id} — Score Entry`;
-  document.getElementById("scoreModalSub").textContent = `${esc(rink.teamA.name)}  vs  ${esc(rink.teamB.name)}`;
-  document.getElementById("entryTeamAName").textContent = rink.teamA.name;
-  document.getElementById("entryTeamBName").textContent = rink.teamB.name;
-  renderScoreList();
-  showModal("scoreModal");
+  el("scoreModalTitle").textContent = `Rink ${rink.id} — Score Entry`;
+  el("scoreModalSub").textContent   = `${rink.teamA.name}  vs  ${rink.teamB.name}`;
+  el("entryTeamAName").textContent  = rink.teamA.name;
+  el("entryTeamBName").textContent  = rink.teamB.name;
+  renderScoreList(); showModal("scoreModal");
 };
 
 function renderScoreList() {
-  const rink = session.rinks.find(r => r.id === editingRinkId);
-  const list = document.getElementById("scoreEntryList");
-  list.innerHTML = editScores.map((s, i) => `
-    <div class="end-entry-row">
-      <div class="end-entry-label">End ${i+1}</div>
-      <input class="end-entry-input team-a-in" type="number" min="0" max="8" value="${s.a}"
-        oninput="updateEndScore(${i},'a',this.value)">
-      <span class="end-entry-sep">:</span>
-      <input class="end-entry-input team-b-in" type="number" min="0" max="8" value="${s.b}"
-        oninput="updateEndScore(${i},'b',this.value)">
-    </div>`).join("");
-  if (editScores.length === 0)
-    list.innerHTML = `<div style="color:var(--muted);text-align:center;padding:20px">No ends yet — click + Add End</div>`;
+  el("scoreEntryList").innerHTML = editScores.length === 0
+    ? `<div style="color:var(--muted);text-align:center;padding:20px">No ends yet — click + Add End</div>`
+    : editScores.map((s,i) =>
+        `<div class="end-entry-row">
+          <div class="end-entry-label">End ${i+1}</div>
+          <input class="end-entry-input team-a-in" type="number" min="0" max="8" value="${s.a}"
+            oninput="updateEndScore(${i},'a',this.value)">
+          <span class="end-entry-sep">:</span>
+          <input class="end-entry-input team-b-in" type="number" min="0" max="8" value="${s.b}"
+            oninput="updateEndScore(${i},'b',this.value)">
+        </div>`).join("");
   updateEntryTotals();
-  const addBtn = document.getElementById("addEndBtn");
-  if (addBtn) addBtn.disabled = editScores.length >= session.totalEnds;
+  const b = el("addEndBtn"); if (b) b.disabled = editScores.length >= session.totalEnds;
 }
 
-window.updateEndScore = (i, team, val) => {
-  editScores[i][team] = Math.max(0, parseInt(val)||0);
-  updateEntryTotals();
-};
-
-window.addEnd = () => {
-  if (editScores.length < session.totalEnds) {
-    editScores.push({a:0, b:0});
-    renderScoreList();
-  }
-};
-
-window.removeEnd = () => {
-  if (editScores.length > 0) { editScores.pop(); renderScoreList(); }
-};
-
+window.updateEndScore = (i, team, val) => { editScores[i][team] = Math.max(0, parseInt(val)||0); updateEntryTotals(); };
+window.addEnd    = () => { if (editScores.length < session.totalEnds) { editScores.push({a:0,b:0}); renderScoreList(); } };
+window.removeEnd = () => { if (editScores.length > 0) { editScores.pop(); renderScoreList(); } };
 function updateEntryTotals() {
   const t = calcTotals(editScores);
-  document.getElementById("entryTotalA").textContent = t.a;
-  document.getElementById("entryTotalB").textContent = t.b;
+  el("entryTotalA").textContent = t.a; el("entryTotalB").textContent = t.b;
 }
+window.saveScores = () => { writeRinkScores(editingRinkId, editScores); closeModal("scoreModal"); toast("Scores saved!"); };
 
-window.saveScores = () => {
-  writeRinkScores(editingRinkId, editScores);
-  closeModal("scoreModal");
-  toast("Scores saved!");
-};
-
-// ── Session Setup ─────────────────────────────────────────────────────────────
+// ── Session setup ─────────────────────────────────────────────────────────────
 window.openSession = () => {
-  document.getElementById("sess_title").value = session.title;
-  document.getElementById("sess_ends").value  = session.totalEnds;
-  document.getElementById("sess_rinkCount").value = session.rinks.length;
-  document.getElementById("sess_pin").value = "";
-  rebuildRinkSetup();
-  showModal("sessionModal");
+  el("sess_title").value     = session.title;
+  el("sess_ends").value      = session.totalEnds;
+  el("sess_rinkCount").value = session.rinks.length;
+  el("sess_pin").value       = "";
+  rebuildRinkSetup(); showModal("sessionModal");
 };
 
 window.rebuildRinkSetup = () => {
-  const count = Math.min(12, Math.max(1, parseInt(document.getElementById("sess_rinkCount").value)||9));
-  const list = document.getElementById("rinkSetupList");
-  list.innerHTML = Array.from({length: count}, (_,i) => {
-    const r = session.rinks[i] || { teamA:{name:`Rink ${i+1} — Red`,players:["Player 1","Player 2"]}, teamB:{name:`Rink ${i+1} — Blue`,players:["Player 3","Player 4"]} };
+  const n = Math.min(12, Math.max(1, parseInt(el("sess_rinkCount").value)||9));
+  el("rinkSetupList").innerHTML = Array.from({length:n}, (_,i) => {
+    const r = session.rinks[i] || {
+      teamA:{name:`Rink ${i+1} — Red`, players:["Player 1","Player 2"]},
+      teamB:{name:`Rink ${i+1} — Blue`,players:["Player 3","Player 4"]}
+    };
     return `<div class="rink-setup-block">
       <div class="rink-setup-title">Rink ${i+1}</div>
       <div class="two-col">
@@ -885,85 +673,80 @@ window.rebuildRinkSetup = () => {
 };
 
 window.saveSession = () => {
-  const count = Math.min(12, Math.max(1, parseInt(document.getElementById("sess_rinkCount").value)||9));
-  const newPin = document.getElementById("sess_pin").value.trim();
-  const rinks = Array.from({length: count}, (_,i) => ({
+  const n   = Math.min(12, Math.max(1, parseInt(el("sess_rinkCount").value)||9));
+  const pin = el("sess_pin").value.trim();
+  const rinks = Array.from({length:n}, (_,i) => ({
     id: i+1,
-    teamA: {
-      name: document.getElementById(`r${i}_an`).value || `Rink ${i+1} — Red`,
-      players: [document.getElementById(`r${i}_ap0`).value||"Player 1", document.getElementById(`r${i}_ap1`).value||"Player 2"]
-    },
-    teamB: {
-      name: document.getElementById(`r${i}_bn`).value || `Rink ${i+1} — Blue`,
-      players: [document.getElementById(`r${i}_bp0`).value||"Player 3", document.getElementById(`r${i}_bp1`).value||"Player 4"]
-    },
+    teamA: { name: el(`r${i}_an`).value||`Rink ${i+1} — Red`,  players:[el(`r${i}_ap0`).value||"Player 1", el(`r${i}_ap1`).value||"Player 2"] },
+    teamB: { name: el(`r${i}_bn`).value||`Rink ${i+1} — Blue`, players:[el(`r${i}_bp0`).value||"Player 3", el(`r${i}_bp1`).value||"Player 4"] },
     scores: session.rinks[i]?.scores || [],
   }));
   writeSession({
-    title: document.getElementById("sess_title").value || "Lawn Bowling",
-    totalEnds: parseInt(document.getElementById("sess_ends").value)||12,
-    pin: newPin || session.pin || "1234",
+    title: el("sess_title").value || "Lawn Bowling",
+    totalEnds: parseInt(el("sess_ends").value)||12,
+    pin: pin || session.pin || "1234",
     rinks,
   });
-  closeModal("sessionModal");
-  toast("Session saved!");
+  closeModal("sessionModal"); toast("Session saved!");
 };
 
 window.confirmReset = () => {
-  if (confirm("Reset all scores? This cannot be undone.")) {
-    const updated = { ...session, rinks: session.rinks.map(r => ({...r, scores:[]})) };
-    writeSession(updated);
+  if (confirm("Reset all scores? Cannot be undone.")) {
+    writeSession({ ...session, rinks: session.rinks.map(r => ({...r, scores:[]})) });
     toast("Scores reset.");
   }
 };
 
-// ── Theme ─────────────────────────────────────────────────────────────────────
+// ── Theme editor ──────────────────────────────────────────────────────────────
 window.openTheme = () => {
-  const current = loadTheme();
-  pendingTheme = { ...DEFAULT_THEME, ...current };
-  const grid = document.getElementById("themeColorGrid");
-  grid.innerHTML = Object.entries(THEME_LABELS).map(([key, label]) => `
-    <div class="color-field">
-      <label>${label}</label>
+  const currentTheme = appConfig?.theme || DEFAULT_THEME;
+  pendingTheme = { ...DEFAULT_THEME, ...currentTheme };
+  pendingLogoBase64 = null; // reset — only set if user picks a new file
+
+  el("themeColorGrid").innerHTML = Object.entries(THEME_LABELS).map(([k,l]) =>
+    `<div class="color-field">
+      <label>${l}</label>
       <div class="color-row">
-        <input type="color" value="${pendingTheme[key]||DEFAULT_THEME[key]}" oninput="syncColor('${key}',this.value,'txt_${key.slice(2)}')">
-        <input type="text" id="txt_${key.slice(2)}" value="${pendingTheme[key]||DEFAULT_THEME[key]}"
-          oninput="syncColor('${key}',this.value,'clr_${key.slice(2)}')" maxlength="9">
+        <input type="color" id="clr_${k}" value="${pendingTheme[k]}" oninput="syncColor('${k}',this.value)">
+        <input type="text"  id="txt_${k}" value="${pendingTheme[k]}" maxlength="9" oninput="syncColorTxt('${k}',this.value)">
       </div>
     </div>`).join("");
-  // re-wire color inputs ids properly
-  Object.entries(THEME_LABELS).forEach(([key]) => {
-    const k = key.slice(2);
-    const colorEl = grid.querySelector(`input[type=color][oninput*="${key}"]`);
-    if (colorEl) colorEl.id = `clr_${k}`;
-  });
 
-  // Logo preview
-  const saved = localStorage.getItem("lb_logo");
-  const prev = document.getElementById("logoPreview");
-  if (saved) { prev.src = saved; prev.style.display = "block"; }
+  // Show current logo from Firebase config
+  const prev = el("logoPreview");
+  const currentLogo = appConfig?.logo;
+  if (currentLogo) { prev.src = currentLogo; prev.style.display = "block"; }
   else prev.style.display = "none";
 
   showModal("themeModal");
 };
 
-window.syncColor = (cssVar, value, otherId) => {
-  pendingTheme[cssVar] = value;
-  const el = document.getElementById(otherId);
-  if (el) { try { el.value = value; } catch {} }
-  applyTheme(pendingTheme);
+window.syncColor    = (k,v) => { pendingTheme[k]=v; const t=el(`txt_${k}`); if(t)t.value=v; applyTheme(pendingTheme); };
+window.syncColorTxt = (k,v) => { pendingTheme[k]=v; const c=el(`clr_${k}`); if(c){try{c.value=v;}catch{}} applyTheme(pendingTheme); };
+
+window.handleLogoUpload = e => {
+  const file = e.target.files[0]; if (!file) return;
+  // Warn if file is large (base64 in Realtime DB has a 10MB node limit)
+  if (file.size > 1.5 * 1024 * 1024) {
+    alert("Logo is over 1.5MB. Please use a smaller image for best performance.");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    pendingLogoBase64 = ev.target.result;
+    const p = el("logoPreview"); p.src = pendingLogoBase64; p.style.display = "block";
+  };
+  reader.readAsDataURL(file);
 };
 
 window.saveTheme = () => {
-  saveThemeLS(pendingTheme);
-  if (pendingLogo) {
-    localStorage.setItem("lb_logo", pendingLogo);
-    setLogo(pendingLogo);
-    pendingLogo = null;
-  }
-  applyTheme(pendingTheme);
+  const newConfig = {
+    theme: pendingTheme,
+    logo: pendingLogoBase64 !== null ? pendingLogoBase64 : (appConfig?.logo || null),
+  };
+  writeConfig(newConfig);
   closeModal("themeModal");
-  toast("Theme applied!");
+  toast("Theme saved to server!");
 };
 
 window.resetTheme = () => {
@@ -972,44 +755,15 @@ window.resetTheme = () => {
   openTheme();
 };
 
-window.handleLogoUpload = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    pendingLogo = ev.target.result;
-    const prev = document.getElementById("logoPreview");
-    prev.src = pendingLogo; prev.style.display = "block";
-  };
-  reader.readAsDataURL(file);
-};
-
-function setLogo(dataUrl) {
-  const img = document.getElementById("logoImg");
-  const emoji = document.getElementById("logoEmoji");
-  img.src = dataUrl;
-  img.style.display = "block";
-  emoji.style.display = "none";
-}
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function calcTotals(scores) {
-  let a=0, b=0;
-  (scores||[]).forEach(s => { a+=s.a||0; b+=s.b||0; });
-  return {a, b};
-}
+function calcTotals(s) { let a=0,b=0; (s||[]).forEach(x=>{a+=x.a||0;b+=x.b||0;}); return{a,b}; }
 function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function showModal(id) { document.getElementById(id).style.display="flex"; }
-function hideBanner()  { document.getElementById("setupBanner").style.display="none"; }
-function showBanner()  { document.getElementById("setupBanner").style.display=""; }
-function showApp()     { document.getElementById("mainApp").style.display=""; document.getElementById("footerBar").style.display=""; }
-
-function toast(msg) {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  setTimeout(() => el.classList.remove("show"), 2800);
-}
+function el(id)       { return document.getElementById(id); }
+function showModal(id){ el(id).style.display="flex"; }
+function hideBanner() { el("setupBanner").style.display="none"; }
+function showBanner()  { el("setupBanner").style.display=""; }
+function showApp()    { el("mainApp").style.display=""; el("footerBar").style.display=""; }
+function toast(m)     { const e=el("toast"); e.textContent=m; e.classList.add("show"); setTimeout(()=>e.classList.remove("show"),2800); }
 </script>
 </body>
 </html>
