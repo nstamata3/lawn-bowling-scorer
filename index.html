@@ -320,7 +320,7 @@
 </header>
 
 <!-- ── FIREBASE CONFIG BANNER ─────────────────── -->
-<div id="setupBanner">
+<div id="setupBanner" style="display:none">
   <div class="setup-inner">
     <h2>🔥 Firebase Setup Required</h2>
     <p>To enable live scores across all devices, connect to a free Firebase Realtime Database.<br>
@@ -520,23 +520,27 @@ function saveThemeLS(theme) {
   localStorage.setItem(LS_THEME, JSON.stringify(theme));
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-(async function boot() {
-  applyTheme(loadTheme());
-  const savedLogo = localStorage.getItem("lb_logo");
-  if (savedLogo) setLogo(savedLogo);
-
-  const savedConfig = localStorage.getItem(LS_CONFIG);
-  if (savedConfig) {
-    try { await connectFirebase(JSON.parse(savedConfig)); return; } catch {}
-  }
-  const localData = localStorage.getItem(LS_LOCAL);
-  if (localData) { try { useLocalMode(true); return; } catch {} }
-})();
-
 // ── Firebase Connect ──────────────────────────────────────────────────────────
-window.connectFirebase = async function(existingConfig) {
-  const cfg = existingConfig || {
+async function doConnectFirebase(cfg, showToast) {
+  // Use a fixed app name — if already initialized, retrieve the existing instance
+  let app;
+  try {
+    app = initializeApp(cfg, "lb-scorer");
+  } catch(e) {
+    app = getApp("lb-scorer");
+  }
+  db = getDatabase(app);
+  localMode = false;
+  document.getElementById("modeLabel").textContent = "🔥 Firebase live";
+  document.getElementById("disconnectBtn").style.display = "";
+  hideBanner(); showApp();
+  subscribeFirebase();
+  if (showToast) toast("🔥 Connected to Firebase!");
+}
+
+// Called from the setup banner button
+window.connectFirebase = async function() {
+  const cfg = {
     apiKey:            document.getElementById("fb_apiKey").value.trim(),
     authDomain:        document.getElementById("fb_authDomain").value.trim(),
     databaseURL:       document.getElementById("fb_dbUrl").value.trim(),
@@ -545,34 +549,47 @@ window.connectFirebase = async function(existingConfig) {
     messagingSenderId: document.getElementById("fb_messagingSenderId").value.trim(),
     appId:             document.getElementById("fb_appId").value.trim(),
   };
-
   if (!cfg.apiKey || !cfg.databaseURL) {
     alert("API Key and Database URL are required."); return;
   }
-
   try {
-    // Use a fixed app name so re-initializing on page load doesn't create duplicates
-    let app;
-    try {
-      app = initializeApp(cfg, "lb-scorer");
-    } catch(e) {
-      // App already initialized — get existing instance
-      app = getApp("lb-scorer");
-    }
-    db = getDatabase(app);
-    // Persist config so it auto-connects on every page load
+    await doConnectFirebase(cfg, true);
+    // Only persist after a successful connection
     localStorage.setItem(LS_CONFIG, JSON.stringify(cfg));
-    localMode = false;
-    document.getElementById("modeLabel").textContent = "🔥 Firebase live";
-    document.getElementById("disconnectBtn").style.display = "";
-    hideBanner(); showApp();
-    subscribeFirebase();
-    if (!existingConfig) toast("🔥 Connected to Firebase!");
   } catch(e) {
     console.error(e);
     alert("Firebase connection failed: " + e.message);
   }
 };
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+(async function boot() {
+  applyTheme(loadTheme());
+  const savedLogo = localStorage.getItem("lb_logo");
+  if (savedLogo) setLogo(savedLogo);
+
+  const savedConfig = localStorage.getItem(LS_CONFIG);
+  if (savedConfig) {
+    try {
+      const cfg = JSON.parse(savedConfig);
+      await doConnectFirebase(cfg, false);
+      return; // Successfully reconnected — stop here, don't show banner
+    } catch(e) {
+      console.error("Auto-reconnect failed:", e);
+      // Show banner so user can retry or switch to local mode
+      showBanner();
+      return;
+    }
+  }
+
+  const localData = localStorage.getItem(LS_LOCAL);
+  if (localData) {
+    try { useLocalMode(true); return; } catch(e) { console.error(e); }
+  }
+
+  // Nothing saved — show the setup banner
+  showBanner();
+})();
 
 function subscribeFirebase() {
   const sessionRef = ref(db, "session");
@@ -984,6 +1001,7 @@ function calcTotals(scores) {
 function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function showModal(id) { document.getElementById(id).style.display="flex"; }
 function hideBanner()  { document.getElementById("setupBanner").style.display="none"; }
+function showBanner()  { document.getElementById("setupBanner").style.display=""; }
 function showApp()     { document.getElementById("mainApp").style.display=""; document.getElementById("footerBar").style.display=""; }
 
 function toast(msg) {
