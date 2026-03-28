@@ -66,13 +66,13 @@
   .stats-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
   .stat-pill { background:var(--surface); border:1px solid var(--border); border-radius:30px; padding:6px 16px; font-size:13px; }
   .stat-pill span { color:var(--muted); margin-right:4px; }
-  .rinks-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+  .lanes-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
 
-  /* ── Rink card ── */
-  .rink-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; transition:box-shadow 0.2s; }
-  .rink-card.complete { border-color:var(--accent); box-shadow:0 0 18px rgba(76,175,115,0.12); }
-  .rink-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-  .rink-label { font-family:'Playfair Display',serif; font-size:13px; font-weight:700; color:var(--blue); letter-spacing:1px; text-transform:uppercase; }
+  /* ── Lane card ── */
+  .lane-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; transition:box-shadow 0.2s; }
+  .lane-card.complete { border-color:var(--accent); box-shadow:0 0 18px rgba(76,175,115,0.12); }
+  .lane-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .lane-label { font-family:'Playfair Display',serif; font-size:13px; font-weight:700; color:var(--blue); letter-spacing:1px; text-transform:uppercase; }
   .badge { font-size:10px; font-weight:700; letter-spacing:0.5px; padding:2px 9px; border-radius:20px; }
   .badge-final  { background:var(--accent); color:#0b1a10; }
   .badge-live   { background:rgba(240,192,64,0.2); color:var(--accent2); border:1px solid var(--accent2); }
@@ -141,8 +141,8 @@
   .logo-preview { max-height:80px; max-width:200px; border-radius:6px; margin:8px auto 0; display:block; }
 
   /* Session setup */
-  .rink-setup-block { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
-  .rink-setup-title { font-size:13px; color:var(--blue); font-weight:700; margin-bottom:10px; }
+  .lane-setup-block { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
+  .lane-setup-title { font-size:13px; color:var(--blue); font-weight:700; margin-bottom:10px; }
   .two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 
   footer { text-align:center; padding:18px; color:var(--muted); font-size:12px; border-top:1px solid var(--border); position:relative; z-index:1; margin-top:20px; }
@@ -204,7 +204,7 @@
 
 <main id="mainApp" style="display:none">
   <div class="stats-bar" id="statsBar"></div>
-  <div class="rinks-grid" id="rinksGrid"></div>
+  <div class="lanes-grid" id="rinksGrid"></div>
 </main>
 <footer id="footerBar" style="display:none">
   Lawn Bowling Scorer &nbsp;·&nbsp; <span id="modeLabel">Connecting…</span> &nbsp;·&nbsp; <span id="adminLabel">View only</span>
@@ -229,7 +229,7 @@
 <!-- Score entry modal -->
 <div class="overlay" id="scoreModal" style="display:none" onclick="if(event.target===this)closeModal('scoreModal')">
   <div class="modal modal-lg" onclick="event.stopPropagation()">
-    <h2 id="scoreModalTitle">Rink Score Entry</h2>
+    <h2 id="scoreModalTitle">Lane Score Entry</h2>
     <p class="modal-sub" id="scoreModalSub"></p>
     <div style="max-height:42vh;overflow-y:auto;margin-bottom:10px" id="scoreEntryList"></div>
     <div style="display:flex;gap:8px;margin-bottom:12px;justify-content:center">
@@ -257,11 +257,11 @@
 <!-- Session setup modal -->
 <div class="overlay" id="sessionModal" style="display:none" onclick="if(event.target===this)closeModal('sessionModal')">
   <div class="modal modal-xl" onclick="event.stopPropagation()">
-    <h2>Session Setup</h2><p class="modal-sub">Configure title, ends, rinks, team names and players.</p>
+    <h2>Session Setup</h2><p class="modal-sub">Configure title, ends, lanes, team names and players.</p>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
       <div class="field"><label>Session Title</label><input id="sess_title"></div>
       <div class="field"><label>Number of Ends</label><input id="sess_ends" type="number" min="1" max="30"></div>
-      <div class="field"><label>Number of Rinks (1–12)</label><input id="sess_rinkCount" type="number" min="1" max="12" oninput="rebuildRinkSetup()"></div>
+      <div class="field"><label>Number of Lanes (1–12)</label><input id="sess_rinkCount" type="number" min="1" max="12" oninput="rebuildRinkSetup()"></div>
       <div class="field"><label>Scorer PIN</label><input id="sess_pin" type="password" maxlength="8" placeholder="Leave blank to keep current"></div>
     </div>
     <div id="rinkSetupList"></div>
@@ -304,13 +304,13 @@ import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/
 //  All visitors will auto-connect. Theme, logo & session all live in Firebase.
 // ═══════════════════════════════════════════════════════════════════════════════
 const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyDMesDnzyNbXImYBaggazy4FZE2SBZHZ8Y",
-  authDomain:        "lawn-bowling-score-tracker.firebaseapp.com",
-  databaseURL:       "https://lawn-bowling-score-tracker-default-rtdb.firebaseio.com",
-  projectId:         "lawn-bowling-score-tracker",
-  storageBucket:     "lawn-bowling-score-tracker.firebasestorage.app",
-  messagingSenderId: "1022722971128",
-  appId:             "1:1022722971128:web:d8bf40bbc372233428720d",
+  apiKey:            "",
+  authDomain:        "",
+  databaseURL:       "",
+  projectId:         "",
+  storageBucket:     "",
+  messagingSenderId: "",
+  appId:             "",
 };
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -332,10 +332,10 @@ const THEME_LABELS = {
 };
 const DEFAULT_SESSION = () => ({
   title:"Lawn Bowling", totalEnds:12, pin:"1234",
-  rinks: Array.from({length:9},(_,i)=>({
+  lanes: Array.from({length:9},(_,i)=>({
     id:i+1,
-    teamA:{name:`Rink ${i+1} — Red`, players:["Player 1","Player 2"]},
-    teamB:{name:`Rink ${i+1} — Blue`,players:["Player 3","Player 4"]},
+    teamA:{name:`Lane ${i+1} — Red`, players:["Player 1","Player 2"]},
+    teamB:{name:`Lane ${i+1} — Blue`,players:["Player 3","Player 4"]},
     scores:[],
   }))
 });
@@ -388,12 +388,12 @@ function initFB(cfg) {
 
 // ── Subscribe to Firebase paths ───────────────────────────────────────────────
 function subscribeAll() {
-  // Session data (scores, rinks, title, ends, pin)
+  // Session data (scores, lanes, title, ends, pin)
   onValue(ref(db, "session"), snap => {
     let data = snap.val();
     if (!data) { initFirebaseSession(); return; }
-    if (data.rinks && !Array.isArray(data.rinks)) data.rinks = Object.values(data.rinks);
-    data.rinks = (data.rinks || []).map(r => {
+    if (data.lanes && !Array.isArray(data.lanes)) data.lanes = Object.values(data.lanes);
+    data.lanes = (data.lanes || []).map(r => {
       if (r.scores && !Array.isArray(r.scores)) r.scores = Object.values(r.scores);
       r.scores = r.scores || [];
       return r;
@@ -490,11 +490,11 @@ function writeConfig(data) {
 }
 
 function writeRinkScores(rinkId, scores) {
-  const idx = session.rinks.findIndex(r => r.id === rinkId);
+  const idx = session.lanes.findIndex(r => r.id === rinkId);
   if (idx < 0) return;
   writeSession({
     ...session,
-    rinks: session.rinks.map((r,i) => i === idx ? { ...r, scores: scores.map(s=>({a:s.a||0,b:s.b||0})) } : r)
+    lanes: session.lanes.map((r,i) => i === idx ? { ...r, scores: scores.map(s=>({a:s.a||0,b:s.b||0})) } : r)
   });
 }
 
@@ -502,34 +502,34 @@ function writeRinkScores(rinkId, scores) {
 function renderAll() {
   if (!session) return;
   el("headerTitle").textContent = session.title || "Lawn Bowling";
-  renderStats(); renderRinks();
+  renderStats(); renderLanes();
 }
 
 function renderStats() {
-  const tot = session.rinks.length;
-  const fin = session.rinks.filter(r => r.scores.length >= session.totalEnds).length;
-  const inp = session.rinks.filter(r => r.scores.length > 0 && r.scores.length < session.totalEnds).length;
-  el("statsSummary").textContent = `${tot} rinks · ${session.totalEnds} ends · ${fin} final · ${inp} in progress`;
+  const tot = session.lanes.length;
+  const fin = session.lanes.filter(r => r.scores.length >= session.totalEnds).length;
+  const inp = session.lanes.filter(r => r.scores.length > 0 && r.scores.length < session.totalEnds).length;
+  el("statsSummary").textContent = `${tot} lanes · ${session.totalEnds} ends · ${fin} final · ${inp} in progress`;
   el("statsBar").innerHTML =
-    `<div class="stat-pill"><span>Rinks:</span>${tot}</div>
+    `<div class="stat-pill"><span>Lanes:</span>${tot}</div>
      <div class="stat-pill"><span>Ends:</span>${session.totalEnds}</div>
      <div class="stat-pill"><span>Final:</span>${fin}</div>
      <div class="stat-pill"><span>In Progress:</span>${inp}</div>
      <div class="stat-pill"><span>Not Started:</span>${tot-fin-inp}</div>`;
 }
 
-function renderRinks() {
-  el("rinksGrid").innerHTML = session.rinks.map(rinkCardHTML).join("");
+function renderLanes() {
+  el("rinksGrid").innerHTML = session.lanes.map(rinkCardHTML).join("");
   if (isAdmin) {
-    session.rinks.forEach(r => {
+    session.lanes.forEach(r => {
       const b = document.getElementById(`eb_${r.id}`);
       if (b) b.addEventListener("click", () => openScoreEntry(r.id));
     });
   }
 }
 
-function rinkCardHTML(rink) {
-  const tot = calcTotals(rink.scores), n = rink.scores.length;
+function rinkCardHTML(lane) {
+  const tot = calcTotals(lane.scores), n = lane.scores.length;
   const done = n >= session.totalEnds;
   const pct  = session.totalEnds > 0 ? Math.min(100, (n / session.totalEnds) * 100) : 0;
   const win  = tot.a > tot.b ? "a" : tot.b > tot.a ? "b" : null;
@@ -539,7 +539,7 @@ function rinkCardHTML(rink) {
             : `<span class="badge badge-waiting">Not Started</span>`;
   const cA = win==="a" ? "score-winner" : win==="b" ? "score-loser" : "score-tie";
   const cB = win==="b" ? "score-winner" : win==="a" ? "score-loser" : "score-tie";
-  const cells = rink.scores.map((s,i) =>
+  const cells = lane.scores.map((s,i) =>
     `<div class="end-cell">
       <div class="end-cell-num">${i+1}</div>
       <div class="end-cell-scores">
@@ -549,24 +549,24 @@ function rinkCardHTML(rink) {
       </div>
     </div>`).join("");
   return `
-    <div class="rink-card ${done?"complete":""}">
-      <div class="rink-card-header"><span class="rink-label">Rink ${rink.id}</span>${badge}</div>
+    <div class="lane-card ${done?"complete":""}">
+      <div class="lane-card-header"><span class="lane-label">Lane ${lane.id}</span>${badge}</div>
       <div class="teams-row">
         <div class="team-block team-a">
-          <div class="team-name">${esc(rink.teamA.name)}</div>
-          <div class="team-players">${rink.teamA.players.map(esc).join(" &amp; ")}</div>
+          <div class="team-name">${esc(lane.teamA.name)}</div>
+          <div class="team-players">${lane.teamA.players.map(esc).join(" &amp; ")}</div>
           <div class="big-score ${cA}">${tot.a}</div>
         </div>
         <div class="vs-divider">VS</div>
         <div class="team-block team-b">
-          <div class="team-name">${esc(rink.teamB.name)}</div>
-          <div class="team-players">${rink.teamB.players.map(esc).join(" &amp; ")}</div>
+          <div class="team-name">${esc(lane.teamB.name)}</div>
+          <div class="team-players">${lane.teamB.players.map(esc).join(" &amp; ")}</div>
           <div class="big-score ${cB}">${tot.b}</div>
         </div>
       </div>
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="end-grid">${cells}</div>
-      ${isAdmin ? `<button class="edit-btn" id="eb_${rink.id}">✎ Enter Scores</button>` : ""}
+      ${isAdmin ? `<button class="edit-btn" id="eb_${lane.id}">✎ Enter Scores</button>` : ""}
     </div>`;
 }
 
@@ -603,13 +603,13 @@ window.lockAdmin = () => {
 
 // ── Score entry ───────────────────────────────────────────────────────────────
 window.openScoreEntry = rinkId => {
-  const rink = session.rinks.find(r => r.id === rinkId); if (!rink) return;
+  const lane = session.lanes.find(r => r.id === rinkId); if (!lane) return;
   editingRinkId = rinkId;
-  editScores = rink.scores.map(s => ({...s}));
-  el("scoreModalTitle").textContent = `Rink ${rink.id} — Score Entry`;
-  el("scoreModalSub").textContent   = `${rink.teamA.name}  vs  ${rink.teamB.name}`;
-  el("entryTeamAName").textContent  = rink.teamA.name;
-  el("entryTeamBName").textContent  = rink.teamB.name;
+  editScores = lane.scores.map(s => ({...s}));
+  el("scoreModalTitle").textContent = `Lane ${lane.id} — Score Entry`;
+  el("scoreModalSub").textContent   = `${lane.teamA.name}  vs  ${lane.teamB.name}`;
+  el("entryTeamAName").textContent  = lane.teamA.name;
+  el("entryTeamBName").textContent  = lane.teamB.name;
   renderScoreList(); showModal("scoreModal");
 };
 
@@ -642,7 +642,7 @@ window.saveScores = () => { writeRinkScores(editingRinkId, editScores); closeMod
 window.openSession = () => {
   el("sess_title").value     = session.title;
   el("sess_ends").value      = session.totalEnds;
-  el("sess_rinkCount").value = session.rinks.length;
+  el("sess_rinkCount").value = session.lanes.length;
   el("sess_pin").value       = "";
   rebuildRinkSetup(); showModal("sessionModal");
 };
@@ -650,12 +650,12 @@ window.openSession = () => {
 window.rebuildRinkSetup = () => {
   const n = Math.min(12, Math.max(1, parseInt(el("sess_rinkCount").value)||9));
   el("rinkSetupList").innerHTML = Array.from({length:n}, (_,i) => {
-    const r = session.rinks[i] || {
-      teamA:{name:`Rink ${i+1} — Red`, players:["Player 1","Player 2"]},
-      teamB:{name:`Rink ${i+1} — Blue`,players:["Player 3","Player 4"]}
+    const r = session.lanes[i] || {
+      teamA:{name:`Lane ${i+1} — Red`, players:["Player 1","Player 2"]},
+      teamB:{name:`Lane ${i+1} — Blue`,players:["Player 3","Player 4"]}
     };
-    return `<div class="rink-setup-block">
-      <div class="rink-setup-title">Rink ${i+1}</div>
+    return `<div class="lane-setup-block">
+      <div class="lane-setup-title">Lane ${i+1}</div>
       <div class="two-col">
         <div>
           <div class="field"><label style="color:var(--accent)">Team A Name</label><input id="r${i}_an" value="${esc(r.teamA.name)}"></div>
@@ -675,24 +675,24 @@ window.rebuildRinkSetup = () => {
 window.saveSession = () => {
   const n   = Math.min(12, Math.max(1, parseInt(el("sess_rinkCount").value)||9));
   const pin = el("sess_pin").value.trim();
-  const rinks = Array.from({length:n}, (_,i) => ({
+  const lanes = Array.from({length:n}, (_,i) => ({
     id: i+1,
-    teamA: { name: el(`r${i}_an`).value||`Rink ${i+1} — Red`,  players:[el(`r${i}_ap0`).value||"Player 1", el(`r${i}_ap1`).value||"Player 2"] },
-    teamB: { name: el(`r${i}_bn`).value||`Rink ${i+1} — Blue`, players:[el(`r${i}_bp0`).value||"Player 3", el(`r${i}_bp1`).value||"Player 4"] },
-    scores: session.rinks[i]?.scores || [],
+    teamA: { name: el(`r${i}_an`).value||`Lane ${i+1} — Red`,  players:[el(`r${i}_ap0`).value||"Player 1", el(`r${i}_ap1`).value||"Player 2"] },
+    teamB: { name: el(`r${i}_bn`).value||`Lane ${i+1} — Blue`, players:[el(`r${i}_bp0`).value||"Player 3", el(`r${i}_bp1`).value||"Player 4"] },
+    scores: session.lanes[i]?.scores || [],
   }));
   writeSession({
     title: el("sess_title").value || "Lawn Bowling",
     totalEnds: parseInt(el("sess_ends").value)||12,
     pin: pin || session.pin || "1234",
-    rinks,
+    lanes,
   });
   closeModal("sessionModal"); toast("Session saved!");
 };
 
 window.confirmReset = () => {
   if (confirm("Reset all scores? Cannot be undone.")) {
-    writeSession({ ...session, rinks: session.rinks.map(r => ({...r, scores:[]})) });
+    writeSession({ ...session, lanes: session.lanes.map(r => ({...r, scores:[]})) });
     toast("Scores reset.");
   }
 };
